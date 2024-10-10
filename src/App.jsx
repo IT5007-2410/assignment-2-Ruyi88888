@@ -154,16 +154,31 @@ class Homepage extends React.Component {
     }
 
     const totalSeats = 10;
-    const freeSeats = totalSeats - travellers.length;
+    const occupiedSeats = travellers.length;
+    const freeSeats = totalSeats - occupiedSeats;
+
+    const seats = Array.from({ length: totalSeats }, (_, index) => {
+      return index < occupiedSeats ? 'occupied' : 'free';
+    });
 
     return (
       <div>
         <h2>Welcome to Ticket To Ride!</h2>
-        <p>We have {travellers.length} travellers booked.</p>
+        <p>We have {occupiedSeats} travellers booked.</p>
+        <p>There are {freeSeats} free seats available.</p>
+        <div className="seat-container">
+          {seats.map((status, index) => (
+            <div
+              key={index}
+              className={`seat ${status === 'occupied' ? 'occupied' : 'free'}`}
+            ></div>
+          ))}
+        </div>
       </div>
     );
   }
 }
+
 
 
 class TicketToRide extends React.Component {
