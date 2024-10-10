@@ -12,7 +12,6 @@ const initialTravellers = [
     travelClass:'Economy',
   },
   {
-
     id: 2, 
     name: 'Rose', 
     phone: 88884444,
