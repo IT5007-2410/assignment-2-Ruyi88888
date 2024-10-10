@@ -45,14 +45,16 @@ function TravellerRow(props) {
 }
 
 function Display(props) {
-  
-	/*Q3. Write code to render rows of table, reach corresponding to one traveller. Make use of the TravellerRow function that draws one row.*/
+  const { travellers } = props;
+
+  if (!travellers || !Array.isArray(travellers)) {
+    return <div>No travellers data available.</div>;
+  }
 
   return (
     <table className="bordered-table">
       <thead>
         <tr>
-	  {/*Q3. Below table is just an example. Add more columns based on the traveller attributes you choose.*/}
           <th>ID</th>
           <th>Name</th>
           <th>Phone</th>
@@ -65,12 +67,14 @@ function Display(props) {
         </tr>
       </thead>
       <tbody>
-        {/*Q3. write code to call the JS variable defined at the top of this function to render table rows.*/}
-        {initialTravellers.map(traveller => (<TravellerRow key={traveller.id} traveller={traveller} />))}
+        {travellers.map(traveller => (
+          <TravellerRow key={traveller.id} traveller={traveller} />
+        ))}
       </tbody>
     </table>
   );
 }
+
 
 class Add extends React.Component {
   constructor() {
@@ -122,13 +126,17 @@ class Delete extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     /*Q5. Fetch the passenger details from the deletion form and call deleteTraveller()*/
+    const form = document.forms.deleteTraveller;
+    const travellerName = form.travellername.value;
+    this.props.deleteTraveller(travellerName);
+    form.reset();
   }
 
   render() {
     return (
       <form name="deleteTraveller" onSubmit={this.handleSubmit}>
 	    {/*Q5. Placeholder form to enter information on which passenger's ticket needs to be deleted. Below code is just an example.*/}
-	<input type="text" name="travellername" placeholder="Name" />
+	      <input type="text" name="travellername" placeholder="Name" />    
         <button>Delete</button>
       </form>
     );
@@ -136,16 +144,22 @@ class Delete extends React.Component {
 }
 
 class Homepage extends React.Component {
-	constructor() {
-	super();
-	}
-	render(){
-	return (
-	<div>
-		{/*Q2. Placeholder for Homepage code that shows free seats visually.*/}
-	</div>);
-	}
+  render() {
+    const { travellers } = this.props;
+
+    if (!travellers || !Array.isArray(travellers)) {
+      return <div>No travellers data available.</div>;
+    }
+
+    return (
+      <div>
+        <h2>Welcome to Ticket To Ride!</h2>
+        <p>We have {travellers.length} travellers booked.</p>
+      </div>
+    );
+  }
 }
+
 
 class TicketToRide extends React.Component {
   constructor() {
@@ -171,15 +185,18 @@ class TicketToRide extends React.Component {
   }
 
   bookTraveller(newTraveller) {
+     /*Q4. Write code to add a passenger to the traveller state variable.*/
     this.setState((prevState) => ({
       travellers: [...prevState.travellers, newTraveller],  
     }));
   }
-	    /*Q4. Write code to add a passenger to the traveller state variable.*/
+  
 
 
   deleteTraveller(passenger) {
-	  /*Q5. Write code to delete a passenger from the traveller state variable.*/
+    this.setState((prevState) => ({
+      travellers: prevState.travellers.filter(traveller => traveller.name !== passenger),
+    }));
   }
 
   render() {
@@ -199,7 +216,7 @@ class TicketToRide extends React.Component {
 		{/*Q3. Code to call component that Displays Travellers.*/}	
 		{/*Q4. Code to call the component that adds a traveller.*/}
 		{/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
-        {this.state.selector === 1 && <Homepage />}
+        {this.state.selector === 1 && <Homepage travellers={this.state.travellers} />}
         {this.state.selector === 2 && <Display travellers={this.state.travellers} />}
         {this.state.selector === 3 && <Add travellers={this.state.travellers} bookTraveller={this.bookTraveller} />}
         {this.state.selector === 4 && <Delete deleteTraveller={this.deleteTraveller} />}
