@@ -111,6 +111,7 @@ class Add extends React.Component {
         <input type="text" name="travellerarrival" placeholder="Arrival" required/>
         <input type="date" name="travellertravelDate" placeholder="Travel Date" required/>
         <input type="text" name="travellertravelClass" placeholder="Travel Class" required/>
+
         <button>Add Traveller</button>
       </form>
     );
@@ -185,7 +186,6 @@ class TicketToRide extends React.Component {
   }
 
   bookTraveller(newTraveller) {
-     /*Q4. Write code to add a passenger to the traveller state variable.*/
     this.setState((prevState) => ({
       travellers: [...prevState.travellers, newTraveller],  
     }));
